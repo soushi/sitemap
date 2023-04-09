@@ -20,6 +20,7 @@
  * @param xsl {string; integer} - URL to the XSL style sheet or doc ID of the XSL style sheet. Default: ''.
  * @param excludeWeblinks {0; 1} - Should weblinks be excluded? You may not want to include links to external sites in your sitemap, and Google gives warnings about multiple redirects to pages within your site. Default: 0.
  * @param ignoreSearchable {0; 1} - Ignore 'Searchable' checked for resources.Default: 0.
+ * @param site_start {integer} - Change site_start resource id.Default: false.
  */
 
 /* Parameters */
@@ -31,6 +32,7 @@ if(!isset($excludeTV))        $excludeTV = 'sitemap_exclude';
 if(!isset($xsl))              $xsl = '';
 if(!isset($excludeWeblinks))  $excludeWeblinks = 1;
 if(!isset($ignoreSearchable)) $ignoreSearchable = 0;
+if(!isset($site_start))       $site_start = false;
 
 $seeThruUnpub = (!isset($seeThruUnpub) || $seeThruUnpub) ? true : false;
 $format       = (isset($format) && ($format !== 'ror')) ? $format : 'sp';
@@ -76,7 +78,11 @@ unset ($_, $excludeTemplates);
 
 $site_editedon = get_site_editedon();
 if($site_editedon) {
-    $docs[evo()->config['site_start']]['editedon'] = $site_editedon;
+    if( $site_start !== false && is_numeric($site_start) ){
+        $docs[$site_start]['editedon'] = $site_editedon;
+    }else{
+        $docs[evo()->config['site_start']]['editedon'] = $site_editedon;
+    }
 }
 
 // build sitemap in specified format

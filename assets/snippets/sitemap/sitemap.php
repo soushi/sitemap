@@ -19,6 +19,7 @@
  * @param excludeTV {string} - Name of TV (boolean type) which sets document exclusion form sitemap. If there is no such TV this parameter will not be used. Default: 'sitemap_exclude'.
  * @param xsl {string; integer} - URL to the XSL style sheet or doc ID of the XSL style sheet. Default: ''.
  * @param excludeWeblinks {0; 1} - Should weblinks be excluded? You may not want to include links to external sites in your sitemap, and Google gives warnings about multiple redirects to pages within your site. Default: 0.
+ * @param ignoreSearchable {0; 1} - Ignore 'Searchable' checked for resources.Default: 0.
  */
 
 /* Parameters */
@@ -29,6 +30,7 @@ if(!isset($excludeTemplates)) $excludeTemplates = '';
 if(!isset($excludeTV))        $excludeTV = 'sitemap_exclude';
 if(!isset($xsl))              $xsl = '';
 if(!isset($excludeWeblinks))  $excludeWeblinks = 1;
+if(!isset($ignoreSearchable)) $ignoreSearchable = 0;
 
 $seeThruUnpub = (!isset($seeThruUnpub) || $seeThruUnpub) ? true : false;
 $format       = (isset($format) && ($format !== 'ror')) ? $format : 'sp';
@@ -64,7 +66,7 @@ foreach ($docs as $doc){
     if($doc[$excludeTV])                                 continue;
     if($doc['changefreq'] === 'exclude')                 continue;
     if(!$doc['published'])                               continue;
-    if(!$doc['searchable'])                              continue;
+    if(!$ignoreSearchable && !$doc['searchable'])        continue;
     if($excludeWeblinks && $doc['type'] === 'reference') continue;
     if($doc['id'] == evo()->documentIdentifier)          continue;
     $_[$doc['id']] = $doc;
